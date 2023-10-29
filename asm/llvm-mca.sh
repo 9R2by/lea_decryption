@@ -1,0 +1,1 @@
+llvm-mca -mcpu=tigerlake -iterations=1 main.asm > lea_decryption_llvm-mca.txt
