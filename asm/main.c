@@ -57,6 +57,10 @@
 #define ROUNDS UINT8_C(24)
 #define ROUNDKEY_ARRAY_SIZE UINT8_C(ROUNDS * ARRAY_WIDTH)
 
+
+#define rotateRightBy9(x) _rotr(x, 9)
+#define rotateLeftBy5(x) _rotl(x, 5)
+#define rotateLeftBy3(x) _rotl(x, 3)
 #define endian_conversion(x) __asm__ volatile ("bswap %0" : "+r" (x))
 
 /**
@@ -64,15 +68,15 @@
  * @param argv
  * @return
  */
-int main(__attribute__((unused)) int argc, char *argv[]) {
+int main(__attribute__((unused))int argc, char *argv[]) {
     uint32_t rk_arr[ROUNDKEY_ARRAY_SIZE] = REVERSED_ROUNDKEYS;
     register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
+    uint64_t start, end;
+    uint32_t ui;
     x0 = strtoul(argv[1], NULL, 10);
     x1 = strtoul(argv[2], NULL, 10);
     x2 = strtoul(argv[3], NULL, 10);
     x3 = strtoul(argv[4], NULL, 10);
-    uint64_t start, end;
-    uint32_t ui;
     MFENCE
     start = __rdtscp(&ui);
     LFENCE
@@ -87,149 +91,149 @@ int main(__attribute__((unused)) int argc, char *argv[]) {
 
     //round 1
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (x3 ^ rk_arr[0])) ^ rk_arr[1];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[2])) ^ rk_arr[1];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[3])) ^ rk_arr[1];
+    xi1 = (rotateRightBy9(x0) - (x3 ^ rk_arr[0])) ^ rk_arr[1];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[2])) ^ rk_arr[1];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[3])) ^ rk_arr[1];
 
     //round 2
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[4])) ^ rk_arr[5];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[6])) ^ rk_arr[5];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[7])) ^ rk_arr[5];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[4])) ^ rk_arr[5];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[6])) ^ rk_arr[5];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[7])) ^ rk_arr[5];
 
     //round 3
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[8])) ^ rk_arr[9];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[10])) ^ rk_arr[9];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[11])) ^ rk_arr[9];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[8])) ^ rk_arr[9];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[10])) ^ rk_arr[9];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[11])) ^ rk_arr[9];
 
     //round 4
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[12])) ^ rk_arr[13];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[14])) ^ rk_arr[13];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[15])) ^ rk_arr[13];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[12])) ^ rk_arr[13];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[14])) ^ rk_arr[13];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[15])) ^ rk_arr[13];
 
     //round 5
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[16])) ^ rk_arr[17];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[18])) ^ rk_arr[17];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[19])) ^ rk_arr[17];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[16])) ^ rk_arr[17];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[18])) ^ rk_arr[17];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[19])) ^ rk_arr[17];
 
 
     //round 6
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[20])) ^ rk_arr[21];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[22])) ^ rk_arr[21];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[23])) ^ rk_arr[21];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[20])) ^ rk_arr[21];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[22])) ^ rk_arr[21];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[23])) ^ rk_arr[21];
 
     //round 7
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[24])) ^ rk_arr[25];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[26])) ^ rk_arr[25];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[27])) ^ rk_arr[25];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[24])) ^ rk_arr[25];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[26])) ^ rk_arr[25];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[27])) ^ rk_arr[25];
 
     //round 8
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[28])) ^ rk_arr[29];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[30])) ^ rk_arr[29];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[31])) ^ rk_arr[29];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[28])) ^ rk_arr[29];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[30])) ^ rk_arr[29];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[31])) ^ rk_arr[29];
 
     //round 9
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[32])) ^ rk_arr[33];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[34])) ^ rk_arr[33];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[35])) ^ rk_arr[33];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[32])) ^ rk_arr[33];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[34])) ^ rk_arr[33];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[35])) ^ rk_arr[33];
 
     //round 10
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[36])) ^ rk_arr[37];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[38])) ^ rk_arr[37];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[39])) ^ rk_arr[37];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[36])) ^ rk_arr[37];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[38])) ^ rk_arr[37];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[39])) ^ rk_arr[37];
 
     //round 11
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[40])) ^ rk_arr[41];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[42])) ^ rk_arr[41];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[43])) ^ rk_arr[41];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[40])) ^ rk_arr[41];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[42])) ^ rk_arr[41];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[43])) ^ rk_arr[41];
 
     //round 12
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[44])) ^ rk_arr[45];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[46])) ^ rk_arr[45];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[47])) ^ rk_arr[45];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[44])) ^ rk_arr[45];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[46])) ^ rk_arr[45];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[47])) ^ rk_arr[45];
 
     //round 13
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[48])) ^ rk_arr[49];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[50])) ^ rk_arr[49];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[51])) ^ rk_arr[49];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[48])) ^ rk_arr[49];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[50])) ^ rk_arr[49];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[51])) ^ rk_arr[49];
 
     //round 14
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[52])) ^ rk_arr[53];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[54])) ^ rk_arr[53];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[55])) ^ rk_arr[53];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[52])) ^ rk_arr[53];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[54])) ^ rk_arr[53];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[55])) ^ rk_arr[53];
 
     //round 15
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[56])) ^ rk_arr[57];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[58])) ^ rk_arr[57];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[59])) ^ rk_arr[57];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[56])) ^ rk_arr[57];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[58])) ^ rk_arr[57];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[59])) ^ rk_arr[57];
 
     //round 16
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[60])) ^ rk_arr[61];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[62])) ^ rk_arr[61];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[63])) ^ rk_arr[61];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[60])) ^ rk_arr[61];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[62])) ^ rk_arr[61];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[63])) ^ rk_arr[61];
 
     //round 17
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[64])) ^ rk_arr[65];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[66])) ^ rk_arr[65];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[67])) ^ rk_arr[65];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[64])) ^ rk_arr[65];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[66])) ^ rk_arr[65];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[67])) ^ rk_arr[65];
 
     //round 18
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[68])) ^ rk_arr[69];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[70])) ^ rk_arr[69];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[71])) ^ rk_arr[69];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[68])) ^ rk_arr[69];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[70])) ^ rk_arr[69];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[71])) ^ rk_arr[69];
 
     //round 19
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[72])) ^ rk_arr[73];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[74])) ^ rk_arr[73];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[75])) ^ rk_arr[73];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[72])) ^ rk_arr[73];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[74])) ^ rk_arr[73];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[75])) ^ rk_arr[73];
 
     //round 20
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[76])) ^ rk_arr[77];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[78])) ^ rk_arr[77];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[79])) ^ rk_arr[77];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[76])) ^ rk_arr[77];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[78])) ^ rk_arr[77];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[79])) ^ rk_arr[77];
 
     //round 21
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[80])) ^ rk_arr[81];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[82])) ^ rk_arr[81];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[83])) ^ rk_arr[81];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[80])) ^ rk_arr[81];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[82])) ^ rk_arr[81];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[83])) ^ rk_arr[81];
 
 
     //round 22
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[84])) ^ rk_arr[85];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[86])) ^ rk_arr[85];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[87])) ^ rk_arr[85];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[84])) ^ rk_arr[85];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[86])) ^ rk_arr[85];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[87])) ^ rk_arr[85];
 
     //round 23
     xi0 = x3;
-    xi1 = (_rotr((x0), 9) - (xi0 ^ rk_arr[88])) ^ rk_arr[89];
-    xi2 = (_rotl((x1), 5) - (xi1 ^ rk_arr[90])) ^ rk_arr[89];
-    xi3 = (_rotl((x2), 3) - (xi2 ^ rk_arr[91])) ^ rk_arr[89];
+    xi1 = (rotateRightBy9(x0) - (xi0 ^ rk_arr[88])) ^ rk_arr[89];
+    xi2 = (rotateLeftBy5(x1) - (xi1 ^ rk_arr[90])) ^ rk_arr[89];
+    xi3 = (rotateLeftBy3(x2) - (xi2 ^ rk_arr[91])) ^ rk_arr[89];
 
     //round 24
     x0 = xi3;
-    x1 = (_rotr((xi0), 9) - (x0 ^ rk_arr[92])) ^ rk_arr[93];
-    x2 = (_rotl((xi1), 5) - (x1 ^ rk_arr[94])) ^ rk_arr[93];
-    x3 = (_rotl((xi2), 3) - (x2 ^ rk_arr[95])) ^ rk_arr[93];
+    x1 = (rotateRightBy9(xi0) - (x0 ^ rk_arr[92])) ^ rk_arr[93];
+    x2 = (rotateLeftBy5(xi1) - (x1 ^ rk_arr[94])) ^ rk_arr[93];
+    x3 = (rotateLeftBy3(xi2) - (x2 ^ rk_arr[95])) ^ rk_arr[93];
 
     endian_conversion(x0);
     endian_conversion(x1);
@@ -242,9 +246,17 @@ int main(__attribute__((unused)) int argc, char *argv[]) {
     MFENCE
     end = __rdtscp(&ui);
     LFENCE
-    printf("Cycles: %lu\n%u\n%u\n%u\n%u\n", (end - start), x0, x1, x2, x3);
+    printf("%lu %u %u %u %u\n", (end - start), x0, x1, x2, x3);
     //IO Operations, Result of decryption in uint32_t
     //Writing to file will decrease the overall cycles as it seems to be faster
     //than writing to the stdout
+    //io is excluded from measuring
+    FILE *file = fopen("decrypted.texts", "a");
+    if (file == NULL) {
+        printf("Unable to open/create the file.\n");
+        return EXIT_FAILURE;
+    }
+    fprintf(file, "%u\n%u\n%u\n%u\n", x0, x1, x2, x3);
+    fclose(file);
     return EXIT_SUCCESS;
 }
