@@ -71,7 +71,8 @@
 int main(__attribute__((unused))int argc, char *argv[]) {
     uint32_t rk_arr[ROUNDKEY_ARRAY_SIZE] = REVERSED_ROUNDKEYS;
     //register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
-    register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
+   // register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
+    uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
     uint64_t start, end;
     uint32_t ui;
     x0 = strtoul(argv[1], NULL, 10);
