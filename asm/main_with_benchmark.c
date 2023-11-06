@@ -71,12 +71,20 @@
 int main(__attribute__((unused))int argc, char *argv[]) {
     uint32_t rk_arr[ROUNDKEY_ARRAY_SIZE] = REVERSED_ROUNDKEYS;
     //register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
-    uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
+    register uint32_t xi0, xi1, xi2, xi3, x0, x1, x2, x3;
+    uint64_t start, end;
+    uint32_t ui;
     x0 = strtoul(argv[1], NULL, 10);
     x1 = strtoul(argv[2], NULL, 10);
     x2 = strtoul(argv[3], NULL, 10);
     x3 = strtoul(argv[4], NULL, 10);
-
+    MFENCE
+    start = __rdtscp(&ui);
+    LFENCE
+    /********
+     * Add code to be tested here:
+     * START:
+     * ********/
     endian_conversion(x0);
     endian_conversion(x1);
     endian_conversion(x2);
@@ -232,8 +240,24 @@ int main(__attribute__((unused))int argc, char *argv[]) {
     endian_conversion(x1);
     endian_conversion(x2);
     endian_conversion(x3);
-
-    printf("%u %u %u %u\n", x0, x1, x2, x3);
-
+    /*
+     * END
+     *
+     * */
+    MFENCE
+    end = __rdtscp(&ui);
+    LFENCE
+    printf("%lu %u %u %u %u\n", (end - start), x0, x1, x2, x3);
+    //IO Operations, Result of decryption in uint32_t
+    //Writing to file will decrease the overall cycles as it seems to be faster
+    //than writing to the stdout
+    //io is excluded from measuring
+    FILE *file = fopen("decrypted.texts", "a");
+    if (file == NULL) {
+        printf("Unable to open/create the file.\n");
+        return EXIT_FAILURE;
+    }
+    fprintf(file, "%u\n%u\n%u\n%u\n", x0, x1, x2, x3);
+    fclose(file);
     return EXIT_SUCCESS;
 }
