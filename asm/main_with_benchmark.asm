@@ -13,27 +13,27 @@ main:                                   # @main
 	push	r12
 	push	rbx
 	push	rax
-	mov	rbp, rsi
+	mov	r13, rsi
 	mov	rdi, qword ptr [rsi + 8]
-	xor	r14d, r14d
+	xor	ebx, ebx
 	xor	esi, esi
 	mov	edx, 10
-	call	strtoul@PLT
-	mov	rbx, rax
-	mov	rdi, qword ptr [rbp + 16]
-	xor	esi, esi
-	mov	edx, 10
-	call	strtoul@PLT
-	mov	r15, rax
-	mov	rdi, qword ptr [rbp + 24]
-	xor	esi, esi
-	mov	edx, 10
-	call	strtoul@PLT
+	call	strtoul
 	mov	r12, rax
-	mov	rdi, qword ptr [rbp + 32]
+	mov	rdi, qword ptr [r13 + 16]
 	xor	esi, esi
 	mov	edx, 10
-	call	strtoul@PLT
+	call	strtoul
+	mov	r14, rax
+	mov	rdi, qword ptr [r13 + 24]
+	xor	esi, esi
+	mov	edx, 10
+	call	strtoul
+	mov	r15, rax
+	mov	rdi, qword ptr [r13 + 32]
+	xor	esi, esi
+	mov	edx, 10
+	call	strtoul
 	mfence
 	mov	rdi, rax
 	rdtscp
@@ -41,488 +41,416 @@ main:                                   # @main
 	shl	rsi, 32
 	or	rsi, rax
 	lfence
-	bswap	ebx
-	bswap	r15d
 	bswap	r12d
+	bswap	r14d
+	bswap	r15d
 	bswap	edi
-	rorx	eax, ebx, 9
+	rorx	eax, r12d, 9
 	rorx	ecx, edi, 9
                                         # kill: def $edi killed $edi killed $rdi def $rdi
 	xor	edi, -200715707
-	add	eax, edi
-	inc	eax
+	lea	eax, [rax + rdi + 1]
 	mov	edx, eax
 	xor	edx, -546766179
-	rorx	edi, r15d, 27
+	rorx	edi, r14d, 27
 	xor	eax, 2078592312
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -546766179
-	rorx	ebp, r12d, 29
+	rorx	r8d, r15d, 29
 	xor	eax, -338608899
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -546766179
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -546766179
 	xor	eax, -1356326361
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -814464733
 	rorx	edx, edx, 27
 	xor	eax, -1594379076
-	add	eax, edx
-	inc	eax
-	mov	ebx, eax
-	xor	ebx, -814464733
+	lea	eax, [rdx + rax + 1]
+	mov	r9d, eax
+	xor	r9d, -814464733
 	rorx	edx, edi, 29
 	xor	eax, -1298246935
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edi, eax
 	xor	edi, -814464733
-	rorx	edx, ebp, 9
+	rorx	edx, r8d, 9
 	xor	eax, -1781840417
-	add	eax, edx
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 884053734
+	lea	eax, [rdx + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 884053734
 	rorx	ecx, ecx, 27
 	xor	eax, 1015440564
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	edx, eax
 	xor	edx, 884053734
-	rorx	ecx, ebx, 29
+	rorx	ecx, r9d, 29
 	xor	eax, -1158540067
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 884053734
 	rorx	edi, edi, 9
 	xor	eax, -1189504979
-	add	edi, eax
-	inc	edi
+	lea	edi, [rdi + rax + 1]
 	mov	eax, edi
 	xor	eax, 100997698
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	shld	eax, edi, 5
                                         # kill: def $edi killed $edi def $rdi
 	xor	edi, -817493316
-	add	ebp, edi
-	inc	ebp
-	mov	edi, ebp
+	lea	r8d, [r8 + rdi + 1]
+	mov	edi, r8d
 	xor	edi, 100997698
 	rorx	edx, edx, 29
-	shld	edi, ebp, 3
-                                        # kill: def $ebp killed $ebp def $rbp
-	xor	ebp, 1337143449
-	add	edx, ebp
-	inc	edx
-	mov	ebp, edx
-	xor	ebp, 100997698
+	shld	edi, r8d, 3
+                                        # kill: def $r8d killed $r8d def $r8
+	xor	r8d, 1337143449
+	lea	edx, [rdx + r8 + 1]
+	mov	r8d, edx
+	xor	r8d, 100997698
 	rorx	ecx, ecx, 9
 	xor	edx, 1653955617
-	add	ecx, edx
-	inc	ecx
+	lea	ecx, [rcx + rdx + 1]
 	mov	edx, ecx
 	xor	edx, 88614219
 	shld	edx, ecx, 5
                                         # kill: def $ecx killed $ecx def $rcx
 	xor	ecx, 2002660726
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rax + rcx + 1]
 	mov	ecx, eax
 	xor	ecx, 88614219
 	shld	ecx, eax, 3
                                         # kill: def $eax killed $eax def $rax
 	xor	eax, 1275268082
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, 88614219
-	rorx	ebp, ebp, 9
+	rorx	r8d, r8d, 9
 	xor	eax, 1021562721
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 1373730486
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 1373730486
 	xor	eax, 1119224496
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, 1373730486
 	xor	eax, 1134958471
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 1373730486
 	rorx	edi, edi, 9
 	xor	eax, 1595845160
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -437755965
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	xor	eax, 85763124
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -437755965
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -437755965
 	rorx	edx, edx, 29
 	xor	eax, 1385814776
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -437755965
 	rorx	ecx, ecx, 9
 	xor	eax, 946612432
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -793511313
 	rorx	edi, edi, 27
 	xor	eax, -416936595
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -793511313
-	rorx	ebp, ebp, 29
+	rorx	r8d, r8d, 29
 	xor	eax, -2027368903
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -793511313
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -793511313
 	rorx	edx, edx, 9
 	xor	eax, 137233687
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, 643757934
 	rorx	ecx, ecx, 27
 	xor	eax, -1777102603
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 643757934
 	rorx	edi, edi, 29
 	xor	eax, -531061
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, 643757934
-	rorx	ebp, ebp, 9
+	rorx	r8d, r8d, 9
 	xor	eax, 580635461
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -1814075890
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -1814075890
 	rorx	edx, edx, 27
 	xor	eax, 1128612178
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -1814075890
 	rorx	ecx, ecx, 29
 	xor	eax, -1280147824
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -1814075890
 	rorx	edi, edi, 9
 	xor	eax, -1302701437
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -1808355376
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	xor	eax, 2080001455
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -1808355376
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -1808355376
 	rorx	edx, edx, 29
 	xor	eax, -1729122633
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -1808355376
 	rorx	ecx, ecx, 9
 	xor	eax, 1242843394
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 2009482466
 	rorx	edi, edi, 27
 	xor	eax, 1116082520
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, 2009482466
-	rorx	ebp, ebp, 29
+	rorx	r8d, r8d, 29
 	xor	eax, -534406304
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 2009482466
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 2009482466
 	rorx	edx, edx, 9
 	xor	eax, 443116357
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, 1371361311
 	rorx	ecx, ecx, 27
 	xor	eax, -1292459442
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 1371361311
 	rorx	edi, edi, 29
 	xor	eax, -1258451347
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, 1371361311
-	rorx	ebp, ebp, 9
+	rorx	r8d, r8d, 9
 	xor	eax, -505173114
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -148315530
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -148315530
 	rorx	edx, edx, 27
 	xor	eax, -628990830
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -148315530
 	rorx	ecx, ecx, 29
 	xor	eax, 1841243172
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -148315530
 	rorx	edi, edi, 9
 	xor	eax, -1794554427
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -889141121
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	xor	eax, 1937742566
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -889141121
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -889141121
 	rorx	edx, edx, 29
 	xor	eax, -756782517
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -889141121
 	rorx	ecx, ecx, 9
 	xor	eax, -1092218850
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 1874071550
 	rorx	edi, edi, 27
 	xor	eax, 361627795
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, 1874071550
-	rorx	ebp, ebp, 29
+	rorx	r8d, r8d, 29
 	xor	eax, 42430244
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 1874071550
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 1874071550
 	rorx	edx, edx, 9
 	xor	eax, -982956019
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -299709832
 	rorx	ecx, ecx, 27
 	xor	eax, -1682793164
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -299709832
 	rorx	edi, edi, 29
 	xor	eax, 1958629107
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -299709832
-	rorx	ebp, ebp, 9
+	rorx	r8d, r8d, 9
 	xor	eax, -1423585203
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 1049849047
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 1049849047
 	rorx	edx, edx, 27
 	xor	eax, -827623783
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, 1049849047
 	rorx	ecx, ecx, 29
 	xor	eax, 816081316
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 1049849047
 	rorx	edi, edi, 9
 	xor	eax, 632406895
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -158062498
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	xor	eax, -391560516
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -158062498
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -158062498
 	rorx	edx, edx, 29
 	xor	eax, -2050034803
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -158062498
 	rorx	ecx, ecx, 9
 	xor	eax, 1867157626
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -969423750
 	rorx	edi, edi, 27
 	xor	eax, 2140779191
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -969423750
-	rorx	ebp, ebp, 29
+	rorx	r8d, r8d, 29
 	xor	eax, 451848677
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, -969423750
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -969423750
 	rorx	edx, edx, 9
 	xor	eax, 1306148276
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, -624313065
 	rorx	ecx, ecx, 27
 	xor	eax, -399995428
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, -624313065
 	rorx	edi, edi, 29
 	xor	eax, 1899574297
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -624313065
-	rorx	ebp, ebp, 9
+	rorx	r8d, r8d, 9
 	xor	eax, -700892835
-	add	eax, ebp
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 1835411675
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, 1835411675
 	rorx	edx, edx, 27
 	xor	eax, 634882697
-	add	eax, edx
-	inc	eax
+	lea	eax, [rdx + rax + 1]
 	mov	edx, eax
 	xor	edx, 1835411675
 	rorx	ecx, ecx, 29
 	xor	eax, 885494260
-	add	eax, ecx
-	inc	eax
+	lea	eax, [rcx + rax + 1]
 	mov	ecx, eax
 	xor	ecx, 1835411675
 	rorx	edi, edi, 9
 	xor	eax, -2090591083
-	add	eax, edi
-	inc	eax
+	lea	eax, [rdi + rax + 1]
 	mov	edi, eax
 	xor	edi, -1634148152
-	rorx	ebp, ebp, 27
+	rorx	r8d, r8d, 27
 	xor	eax, 2043834360
-	add	eax, ebp
-	inc	eax
-	mov	ebx, eax
-	xor	ebx, -1634148152
+	lea	eax, [r8 + rax + 1]
+	mov	r8d, eax
+	xor	r8d, -1634148152
 	rorx	edx, edx, 29
 	xor	eax, -56482482
-	add	eax, edx
-	inc	eax
-	mov	r15d, eax
-	xor	r15d, -1634148152
+	lea	eax, [rdx + rax + 1]
+	mov	ebp, eax
+	xor	ebp, -1634148152
 	rorx	ecx, ecx, 9
 	xor	eax, 1633489123
-	add	eax, ecx
-	inc	eax
-	mov	r12d, eax
-	xor	r12d, 38367248
+	lea	eax, [rcx + rax + 1]
+	mov	r14d, eax
+	xor	r14d, 38367248
 	rorx	ecx, edi, 27
 	xor	eax, -453381538
-	add	eax, ecx
-	inc	eax
-	mov	ebp, eax
-	xor	ebp, 38367248
-	rorx	ecx, ebx, 29
+	lea	eax, [rcx + rax + 1]
+	mov	r15d, eax
+	xor	r15d, 38367248
+	rorx	ecx, r8d, 29
 	xor	eax, -189036692
-	lea	ebx, [rcx + rax]
-	inc	ebx
-	xor	ebx, 38367248
-	bswap	r15d
-	mfence
-	bswap	r12d
+	lea	r12d, [rcx + rax + 1]
+	xor	r12d, 38367248
 	bswap	ebp
+	mfence
+	bswap	r14d
+	bswap	r15d
 	rdtscp
-	bswap	ebx
+	bswap	r12d
 	shl	rdx, 32
 	or	rdx, rax
 	lfence
 	sub	rdx, rsi
-	lea	rdi, [rip + .L.str]
+	mov	edi, offset .L.str
 	mov	rsi, rdx
-	mov	edx, r15d
-	mov	ecx, r12d
-	mov	r8d, ebp
-	mov	r9d, ebx
+	mov	edx, ebp
+	mov	ecx, r14d
+	mov	r8d, r15d
+	mov	r9d, r12d
 	xor	eax, eax
-	call	printf@PLT
-	lea	rdi, [rip + .L.str.1]
-	lea	rsi, [rip + .L.str.2]
-	call	fopen@PLT
+	call	printf
+	mov	edi, offset .L.str.1
+	mov	esi, offset .L.str.2
+	call	fopen
 	test	rax, rax
 	je	.LBB0_1
 # %bb.2:
 	mov	r13, rax
-	lea	rsi, [rip + .L.str.4]
+	mov	esi, offset .L.str.4
 	mov	rdi, rax
-	mov	edx, r15d
-	mov	ecx, r12d
-	mov	r8d, ebp
-	mov	r9d, ebx
+	mov	edx, ebp
+	mov	ecx, r14d
+	mov	r8d, r15d
+	mov	r9d, r12d
 	xor	eax, eax
-	call	fprintf@PLT
+	call	fprintf
 	mov	rdi, r13
-	call	fclose@PLT
+	call	fclose
 	jmp	.LBB0_3
 .LBB0_1:
-	lea	rdi, [rip + .Lstr]
+	mov	edi, offset .Lstr
 	call	puts@PLT
-	mov	r14d, 1
+	mov	ebx, 1
 .LBB0_3:
-	mov	eax, r14d
+	mov	eax, ebx
 	add	rsp, 8
 	pop	rbx
 	pop	r12
@@ -560,6 +488,6 @@ main:                                   # @main
 	.asciz	"Unable to open/create the file."
 	.size	.Lstr, 32
 
-	.ident	"Ubuntu clang version 14.0.0-1ubuntu1.1"
+	.ident	"clang version 16.0.6 (Fedora 16.0.6-3.fc38)"
 	.section	".note.GNU-stack","",@progbits
 	.addrsig
