@@ -9,7 +9,7 @@ if __name__ == '__main__':
     path_to_binary = './target/lea_decryption'
     fig, ax = plt.subplots()
     output_text = ''
-    n = pow(2, 12)
+    n = pow(2, 15)
     median_arr = []
 
     for _ in tqdm(range(n + 1), desc="Loading", unit="Runs"):
