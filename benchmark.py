@@ -9,8 +9,10 @@ if __name__ == '__main__':
     path_to_binary = './target/lea_decryption'
     fig, ax = plt.subplots()
     output_text = ''
-    n = pow(2, 15)
+    #n = pow(2, 15)
+    n = 62500
     median_arr = []
+    temp_median_arr = []
 
     for _ in tqdm(range(n + 1), desc="Loading", unit="Runs"):
         command = [path_to_binary, str(random.getrandbits(32)), str(random.getrandbits(32)),
@@ -20,6 +22,7 @@ if __name__ == '__main__':
         stdout, stderr = process.communicate()
         cycles = int(stdout.split()[0])
         median_arr.append(cycles)
+        temp_median_arr.append(cycles)
 
     ax.plot(signal.medfilt(median_arr), label=f'Median filtered decryption algorithm cycles per run')
     ax.set_xlabel('n')
@@ -27,4 +30,4 @@ if __name__ == '__main__':
     ax.set_title('LEA Decryption')
     ax.legend()
     plt.savefig('output_plot.svg', format='svg')
-    print(statistics.median(median_arr))
+    print(statistics.median(temp_median_arr))
