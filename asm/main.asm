@@ -41,13 +41,16 @@ main:                                   # @main
 	shl	rsi, 32
 	or	rsi, rax
 	lfence
+
+
+
+
 	bswap	r12d
 	bswap	r14d
 	bswap	r15d
 	bswap	edi
 	rorx	eax, r12d, 9
 	rorx	ecx, edi, 9
-                                        # kill: def $edi killed $edi killed $rdi def $rdi
 	xor	edi, -200715707
 	lea	eax, [rax + rdi + 1]
 	mov	edx, eax
@@ -406,11 +409,12 @@ main:                                   # @main
 	lea	r12d, [rcx + rax + 1]
 	xor	r12d, 38367248
 	bswap	ebp
-	mfence
 	bswap	r14d
 	bswap	r15d
-	rdtscp
 	bswap	r12d
+
+	mfence
+	rdtscp
 	shl	rdx, 32
 	or	rdx, rax
 	lfence
